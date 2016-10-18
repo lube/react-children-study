@@ -1,55 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import DraggableProvider from './DraggableProvider';
+import Draggable from './Draggable';
 import './App.css';
 
-const Draggable = ({x, y, color}) => (
-  <span style={{position: 'absolute', left:x, top: y, backgroundColor: color}}> ALO! </span>
+const UnComponente = () => (
+  <div> ALO! </div>
 )
 
-class DraggableProvider extends React.Component {
-  constructor() {
-    super()
-    this.state = { x: 0, y: 0 }
-    this.handleMouseOver = this.handleMouseOver.bind(this)
-  }
-
-  handleMouseOver(e) {
-    this.setState({x: e.nativeEvent.clientX, y: e.nativeEvent.clientY})
-  }
-
-  render() {
-    return (
-      <div className="App-header" onMouseMove={this.handleMouseOver}>
-        {this.props.children(this.state.x, this.state.y)}
-      </div>
-    )
-  }
-}
-
-const ConnectedDraggable = MousePosProviderWrapper(Draggable)
-
-function MousePosProviderWrapper(WrappedComponent) {
-  return class MousePosProvider extends React.Component {
-    constructor() {
-      super()
-      this.state = { x: 0, y: 0 }
-      this.handleMouseOver = this.handleMouseOver.bind(this)
-    }
-
-    handleMouseOver(e) {
-      this.setState({x: e.nativeEvent.clientX, y: e.nativeEvent.clientY})
-    }
-
-    render() {
-      return (
-        <div  className="App-header"  onMouseMove={this.handleMouseOver}>
-          <WrappedComponent x={this.state.x} y={this.state.y} color={this.props.color}/>
-        </div>
-      )
-    }
-  }
-}
-
+const SpanArrastrable = Draggable(UnComponente)
 
 class App extends Component {
   render() {
@@ -58,10 +17,10 @@ class App extends Component {
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
-          <ConnectedDraggable color='red' />
+          <SpanArrastrable color='red'/>
           <hr/>
           <DraggableProvider>
-            {(x,y) => <Draggable color='blue' {...{x,y}}> ALO! </Draggable>}
+            {(x,y) => <span style={{position: 'absolute', left:x, top:y, backgroundColor: 'blue'}}><UnComponente/></span>}
           </DraggableProvider>
         </div>
       </div>
